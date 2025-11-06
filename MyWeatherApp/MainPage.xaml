@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:MyWeatherApp.ViewModels"
+             xmlns:helpers="clr-namespace:MyWeatherApp.Helpers"
+             xmlns:models="clr-namespace:MyWeatherApp.Core.Models;assembly=MyWeatherApp.Core"
+             x:DataType="viewmodels:WeatherViewModel"
+             x:Class="MyWeatherApp.MainPage"
+             Title="Weather Forecast">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <helpers:InverseBoolConverter x:Key="InverseBoolConverter" />
+
+            <Style x:Key="DailyIconImage" TargetType="Image">
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="Aspect" Value="AspectFit" />
+            </Style>
+
+            <Style x:Key="CurrentIconImage" TargetType="Image" BasedOn="{StaticResource DailyIconImage}">
+                <Setter Property="WidthRequest" Value="64" />
+                <Setter Property="HeightRequest" Value="64" />
+            </Style>
+
+            <Style x:Key="HourlyIconImage" TargetType="Image" BasedOn="{StaticResource DailyIconImage}">
+                <Setter Property="WidthRequest" Value="36" />
+                <Setter Property="HeightRequest" Value="36" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <Grid RowDefinitions="Auto, Auto, *" Padding="20" RowSpacing="20">
+
+            <StackLayout Grid.Row="0" Orientation="Horizontal" HorizontalOptions="Fill">
+
+                <VerticalStackLayout VerticalOptions="Center" Spacing="2">
+                    <Label Text="{Binding WeatherData.Timezone, StringFormat='Weather for {0}'}"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           VerticalOptions="Center" />
+                    <Label Text="{Binding LastUpdatedDisplay}"
+                           FontSize="12"
+                           TextColor="Gray"
+                           VerticalOptions="Center" />
+                </VerticalStackLayout>
+
+                <Button Text="Refresh"
+                        Command="{Binding LoadWeatherCommand}"
+                        HorizontalOptions="EndAndExpand"
+                        VerticalOptions="Center" />
+            </StackLayout>
+
+            <ActivityIndicator Grid.Row="1"
+                               IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"
+                               HorizontalOptions="Center" />
+
+            <VerticalStackLayout Grid.Row="1" Spacing="25" 
+                                 IsVisible="{Binding IsLoading, Converter={StaticResource InverseBoolConverter}}">
+
+                <Frame Padding="15" CornerRadius="10" BorderColor="LightGray" HasShadow="True">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Current Weather" FontSize="20" FontAttributes="Bold" />
+                        <Grid ColumnDefinitions="*, Auto, Auto" RowDefinitions="Auto, Auto, Auto" ColumnSpacing="10">
+
+                            <Label Grid.Row="0" Grid.Column="0"
+                                   Text="{Binding WeatherData.Current.Temperature2m, StringFormat='{0:F0}°C'}"
+                                   FontSize="48" FontAttributes="Bold" />
+
+                            <Label Grid.Row="1" Grid.Column="0"
+                                   Text="{Binding CurrentWeatherDescription}"
+                                   FontSize="18" />
+
+                            <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
+                                   Style="{StaticResource CurrentIconImage}">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{Binding CurrentWeatherIcon}"
+                                                     FontFamily="FontAwesomeSolid"
+                                                     Color="White" />
+                                </Image.Source>
+                            </Image>
+
+                            <VerticalStackLayout Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Spacing="5" 
+                                                 VerticalOptions="Center" HorizontalOptions="End">
+                                <Label Text="{Binding WeatherData.Current.ApparentTemperature, StringFormat='Feels like: {0:F0}°'}" HorizontalOptions="End" />
+                                <Label Text="{Binding WeatherData.Current.WindSpeed10m, StringFormat='Wind: {0} km/h'}" HorizontalOptions="End" />
+                                <Label Text="{Binding WeatherData.Current.RelativeHumidity2m, StringFormat='Humidity: {0}%'}" HorizontalOptions="End" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+
+                <Frame Padding="15" CornerRadius="10" BorderColor="LightGray" HasShadow="True">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Hourly Forecast" FontSize="20" FontAttributes="Bold" />
+
+                        <CollectionView ItemsSource="{Binding HourlyForecast}"
+                                        HeightRequest="150">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Horizontal" 
+                                                   ItemSpacing="10"/>
+                            </CollectionView.ItemsLayout>
+
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:HourlyForecastItem">
+                                    <VerticalStackLayout Spacing="8" 
+                                                         Padding="10"
+                                                         WidthRequest="80"
+                                                         HorizontalOptions="Center">
+
+                                        <Label Text="{Binding TimeDisplay}"
+                                               HorizontalOptions="Center"
+                                               FontAttributes="Bold" />
+
+                                        <Image Style="{StaticResource HourlyIconImage}">
+                                            <Image.Source>
+                                                <FontImageSource Glyph="{Binding Icon}"
+                                                                 FontFamily="FontAwesomeSolid"
+                                                                 Color="White" />
+                                            </Image.Source>
+                                        </Image>
+
+                                        <Label Text="{Binding Temperature, StringFormat='{0:F0}°'}"
+                                               HorizontalOptions="Center"
+                                               FontSize="16" />
+
+                                        <Label Text="{Binding PrecipitationChance, StringFormat='{0}%'}"
+                                               HorizontalOptions="Center"
+                                               TextColor="Gray"
+                                               FontSize="12" />
+
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Frame>
+
+
+                <Frame Padding="15" CornerRadius="10" BorderColor="LightGray" HasShadow="True">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="7-Day Forecast" FontSize="20" FontAttributes="Bold" />
+
+                        <CollectionView ItemsSource="{Binding DailyForecast}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:DailyForecastItem">
+                                    <Grid Padding="0, 10" ColumnDefinitions="Auto, Auto, *, Auto" ColumnSpacing="15">
+
+                                        <VerticalStackLayout Grid.Column="0" WidthRequest="90">
+                                            <Label Text="{Binding DayOfWeek}" FontAttributes="Bold" />
+                                            <Label Text="{Binding Date, StringFormat='{0:MMM d}'}" FontSize="12" TextColor="Gray" />
+                                        </VerticalStackLayout>
+
+                                        <Image Grid.Column="1"
+                                               Style="{StaticResource DailyIconImage}">
+                                            <Image.Source>
+                                                <FontImageSource Glyph="{Binding WeatherIcon}"
+                                                                 FontFamily="FontAwesomeSolid"
+                                                                 Color="White" />
+                                            </Image.Source>
+                                        </Image>
+
+                                        <Label Grid.Column="2"
+                                               Text="{Binding WeatherDescription}"
+                                               VerticalOptions="Center" />
+
+                                        <Label Grid.Column="3"
+                                               HorizontalOptions="End"
+                                               VerticalOptions="Center">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding MaxTemp, StringFormat='{0:F0}°'}" FontAttributes="Bold" />
+                                                    <Span Text=" / " />
+                                                    <Span Text="{Binding MinTemp, StringFormat='{0:F0}°'}" TextColor="Gray" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                    </VerticalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </Grid>
+    </ScrollView>
+</ContentPage>
