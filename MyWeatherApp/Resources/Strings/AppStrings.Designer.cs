@@ -88,6 +88,15 @@ namespace MyWeatherApp.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Friday.
+        /// </summary>
+        public static string Friday {
+            get {
+                return ResourceManager.GetString("Friday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hourly Forecast.
         /// </summary>
         public static string HourlyForecastTitle {
@@ -124,11 +133,137 @@ namespace MyWeatherApp.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Monday.
+        /// </summary>
+        public static string Monday {
+            get {
+                return ResourceManager.GetString("Monday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jan.
+        /// </summary>
+        public static string Month1 {
+            get {
+                return ResourceManager.GetString("Month1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Oct.
+        /// </summary>
+        public static string Month10 {
+            get {
+                return ResourceManager.GetString("Month10", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nov.
+        /// </summary>
+        public static string Month11 {
+            get {
+                return ResourceManager.GetString("Month11", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dec.
+        /// </summary>
+        public static string Month12 {
+            get {
+                return ResourceManager.GetString("Month12", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Feb.
+        /// </summary>
+        public static string Month2 {
+            get {
+                return ResourceManager.GetString("Month2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mar.
+        /// </summary>
+        public static string Month3 {
+            get {
+                return ResourceManager.GetString("Month3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apr.
+        /// </summary>
+        public static string Month4 {
+            get {
+                return ResourceManager.GetString("Month4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to May.
+        /// </summary>
+        public static string Month5 {
+            get {
+                return ResourceManager.GetString("Month5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jun.
+        /// </summary>
+        public static string Month6 {
+            get {
+                return ResourceManager.GetString("Month6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jul.
+        /// </summary>
+        public static string Month7 {
+            get {
+                return ResourceManager.GetString("Month7", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Aug.
+        /// </summary>
+        public static string Month8 {
+            get {
+                return ResourceManager.GetString("Month8", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sep.
+        /// </summary>
+        public static string Month9 {
+            get {
+                return ResourceManager.GetString("Month9", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Refresh.
         /// </summary>
         public static string RefreshButton {
             get {
                 return ResourceManager.GetString("RefreshButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saturday.
+        /// </summary>
+        public static string Saturday {
+            get {
+                return ResourceManager.GetString("Saturday", resourceCulture);
             }
         }
         
@@ -142,11 +277,47 @@ namespace MyWeatherApp.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sunday.
+        /// </summary>
+        public static string Sunday {
+            get {
+                return ResourceManager.GetString("Sunday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thursday.
+        /// </summary>
+        public static string Thursday {
+            get {
+                return ResourceManager.GetString("Thursday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Now.
+        /// </summary>
+        public static string TimeNow {
+            get {
+                return ResourceManager.GetString("TimeNow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Today.
         /// </summary>
         public static string Today {
             get {
                 return ResourceManager.GetString("Today", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tuesday.
+        /// </summary>
+        public static string Tuesday {
+            get {
+                return ResourceManager.GetString("Tuesday", resourceCulture);
             }
         }
         
@@ -169,7 +340,7 @@ namespace MyWeatherApp.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Dulksna.
+        ///   Looks up a localized string similar to Drizzle.
         /// </summary>
         public static string WeatherDrizzle {
             get {
@@ -192,6 +363,15 @@ namespace MyWeatherApp.Resources.Strings {
         public static string WeatherFor {
             get {
                 return ResourceManager.GetString("WeatherFor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weather Forecast.
+        /// </summary>
+        public static string WeatherForecastAppTitle {
+            get {
+                return ResourceManager.GetString("WeatherForecastAppTitle", resourceCulture);
             }
         }
         
@@ -273,6 +453,15 @@ namespace MyWeatherApp.Resources.Strings {
         public static string WeatherUnknown {
             get {
                 return ResourceManager.GetString("WeatherUnknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wednesday.
+        /// </summary>
+        public static string Wednesday {
+            get {
+                return ResourceManager.GetString("Wednesday", resourceCulture);
             }
         }
         

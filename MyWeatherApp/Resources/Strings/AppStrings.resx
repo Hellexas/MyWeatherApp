@@ -172,7 +172,7 @@
     <value>Fog</value>
   </data>
   <data name="WeatherDrizzle" xml:space="preserve">
-    <value>Dulksna</value>
+    <value>Drizzle</value>
   </data>
   <data name="WeatherRain" xml:space="preserve">
     <value>Rain</value>
@@ -191,5 +191,68 @@
   </data>
   <data name="WeatherUnknown" xml:space="preserve">
     <value>Unknown</value>
+  </data>
+  <data name="Monday" xml:space="preserve">
+    <value>Monday</value>
+  </data>
+  <data name="Tuesday" xml:space="preserve">
+    <value>Tuesday</value>
+  </data>
+  <data name="Wednesday" xml:space="preserve">
+    <value>Wednesday</value>
+  </data>
+  <data name="Thursday" xml:space="preserve">
+    <value>Thursday</value>
+  </data>
+  <data name="Friday" xml:space="preserve">
+    <value>Friday</value>
+  </data>
+  <data name="Saturday" xml:space="preserve">
+    <value>Saturday</value>
+  </data>
+  <data name="Sunday" xml:space="preserve">
+    <value>Sunday</value>
+  </data>
+  <data name="WeatherForecastAppTitle" xml:space="preserve">
+    <value>Weather Forecast</value>
+  </data>
+  <data name="TimeNow" xml:space="preserve">
+    <value>Now</value>
+  </data>
+  <data name="Month1" xml:space="preserve">
+    <value>Jan</value>
+  </data>
+  <data name="Month2" xml:space="preserve">
+    <value>Feb</value>
+  </data>
+  <data name="Month3" xml:space="preserve">
+    <value>Mar</value>
+  </data>
+  <data name="Month4" xml:space="preserve">
+    <value>Apr</value>
+  </data>
+  <data name="Month5" xml:space="preserve">
+    <value>May</value>
+  </data>
+  <data name="Month6" xml:space="preserve">
+    <value>Jun</value>
+  </data>
+  <data name="Month7" xml:space="preserve">
+    <value>Jul</value>
+  </data>
+  <data name="Month8" xml:space="preserve">
+    <value>Aug</value>
+  </data>
+  <data name="Month9" xml:space="preserve">
+    <value>Sep</value>
+  </data>
+  <data name="Month10" xml:space="preserve">
+    <value>Oct</value>
+  </data>
+  <data name="Month11" xml:space="preserve">
+    <value>Nov</value>
+  </data>
+  <data name="Month12" xml:space="preserve">
+    <value>Dec</value>
   </data>
 </root>

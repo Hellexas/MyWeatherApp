@@ -1,12 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:MyWeatherApp.ViewModels"
              xmlns:helpers="clr-namespace:MyWeatherApp.Helpers"
              xmlns:models="clr-namespace:MyWeatherApp.Core.Models;assembly=MyWeatherApp.Core"
+             xmlns:strings="clr-namespace:MyWeatherApp.Resources.Strings"
              x:DataType="viewmodels:WeatherViewModel"
              x:Class="MyWeatherApp.MainPage"
-             Title="Weather Forecast">
+             Title="{x:Static strings:AppStrings.WeatherForecastAppTitle}">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -37,20 +37,33 @@
             <StackLayout Grid.Row="0" Orientation="Horizontal" HorizontalOptions="Fill">
 
                 <VerticalStackLayout VerticalOptions="Center" Spacing="2">
-                    <Label Text="{Binding WeatherData.Timezone, StringFormat='Weather for {0}'}"
-                           FontSize="24"
-                           FontAttributes="Bold"
-                           VerticalOptions="Center" />
+                    <Label Text="{Binding WeatherData.Timezone, StringFormat={x:Static strings:AppStrings.WeatherFor}}"
+                FontSize="24"
+                FontAttributes="Bold"
+                VerticalOptions="Center" />
                     <Label Text="{Binding LastUpdatedDisplay}"
-                           FontSize="12"
-                           TextColor="Gray"
-                           VerticalOptions="Center" />
+                FontSize="12"
+                TextColor="Gray"
+                VerticalOptions="Center" />
                 </VerticalStackLayout>
 
-                <Button Text="Refresh"
-                        Command="{Binding LoadWeatherCommand}"
-                        HorizontalOptions="EndAndExpand"
-                        VerticalOptions="Center" />
+                <HorizontalStackLayout Spacing="5" HorizontalOptions="EndAndExpand" VerticalOptions="Center">
+
+                    <Button Text="EN" 
+                x:Name="EnglishButton"
+                Clicked="EnglishButton_Clicked"
+                WidthRequest="50" 
+                Padding="0" 
+                FontSize="12" />
+
+                    <Button Text="LT" 
+                x:Name="LithuanianButton"
+                Clicked="LithuanianButton_Clicked"
+                WidthRequest="50" 
+                Padding="0" 
+                FontSize="12" />
+
+                </HorizontalStackLayout>
             </StackLayout>
 
             <ActivityIndicator Grid.Row="1"
@@ -63,7 +76,7 @@
 
                 <Frame Padding="15" CornerRadius="10" BorderColor="LightGray" HasShadow="True">
                     <VerticalStackLayout Spacing="10">
-                        <Label Text="Current Weather" FontSize="20" FontAttributes="Bold" />
+                        <Label Text="{x:Static strings:AppStrings.CurrentWeatherTitle}" FontSize="20" FontAttributes="Bold" />
                         <Grid ColumnDefinitions="*, Auto, Auto" RowDefinitions="Auto, Auto, Auto" ColumnSpacing="10">
 
                             <Label Grid.Row="0" Grid.Column="0"
@@ -85,9 +98,9 @@
 
                             <VerticalStackLayout Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Spacing="5" 
                                                  VerticalOptions="Center" HorizontalOptions="End">
-                                <Label Text="{Binding WeatherData.Current.ApparentTemperature, StringFormat='Feels like: {0:F0}°'}" HorizontalOptions="End" />
-                                <Label Text="{Binding WeatherData.Current.WindSpeed10m, StringFormat='Wind: {0} km/h'}" HorizontalOptions="End" />
-                                <Label Text="{Binding WeatherData.Current.RelativeHumidity2m, StringFormat='Humidity: {0}%'}" HorizontalOptions="End" />
+                                <Label Text="{Binding WeatherData.Current.ApparentTemperature, StringFormat={x:Static strings:AppStrings.FeelsLike}}" HorizontalOptions="End" />
+                                <Label Text="{Binding WeatherData.Current.WindSpeed10m, StringFormat={x:Static strings:AppStrings.Wind}}" HorizontalOptions="End" />
+                                <Label Text="{Binding WeatherData.Current.RelativeHumidity2m, StringFormat={x:Static strings:AppStrings.Humidity}}" HorizontalOptions="End" />
                             </VerticalStackLayout>
                         </Grid>
                     </VerticalStackLayout>
@@ -96,7 +109,7 @@
 
                 <Frame Padding="15" CornerRadius="10" BorderColor="LightGray" HasShadow="True">
                     <VerticalStackLayout Spacing="10">
-                        <Label Text="Hourly Forecast" FontSize="20" FontAttributes="Bold" />
+                        <Label Text="{x:Static strings:AppStrings.HourlyForecastTitle}" FontSize="20" FontAttributes="Bold" />
 
                         <CollectionView ItemsSource="{Binding HourlyForecast}"
                                         HeightRequest="150">
@@ -143,7 +156,7 @@
 
                 <Frame Padding="15" CornerRadius="10" BorderColor="LightGray" HasShadow="True">
                     <VerticalStackLayout Spacing="10">
-                        <Label Text="7-Day Forecast" FontSize="20" FontAttributes="Bold" />
+                        <Label Text="{x:Static strings:AppStrings.SevenDayForecastTitle}" FontSize="20" FontAttributes="Bold" />
 
                         <CollectionView ItemsSource="{Binding DailyForecast}">
                             <CollectionView.ItemTemplate>
@@ -152,7 +165,10 @@
 
                                         <VerticalStackLayout Grid.Column="0" WidthRequest="90">
                                             <Label Text="{Binding DayOfWeek}" FontAttributes="Bold" />
-                                            <Label Text="{Binding Date, StringFormat='{0:MMM d}'}" FontSize="12" TextColor="Gray" />
+
+                                            <Label Text="{Binding DateDisplay}" 
+                                                   FontSize="12" 
+                                                   TextColor="Gray" />
                                         </VerticalStackLayout>
 
                                         <Image Grid.Column="1"

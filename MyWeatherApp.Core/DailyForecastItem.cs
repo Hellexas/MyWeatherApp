@@ -11,6 +11,7 @@ namespace MyWeatherApp.Core.Models
         public string WeatherIcon { get; set; }
         public DateTime Date { get; set; } //store the full DateTime object
         public string DayOfWeek { get; set; }
+        public string DateDisplay { get; set; } // <-- This is the new property
         public double MaxTemp { get; set; }
         public double MinTemp { get; set; }
         public int PrecipitationProbability { get; set; }
@@ -52,13 +53,13 @@ namespace MyWeatherApp.Core.Models
             return format switch
             {
                 // "G" for General (Day (Date))
-                "G" => $"{DayOfWeek} ({Date.ToString("MMM d", formatProvider)})",
+                "G" => $"{DayOfWeek} ({DateDisplay})", // Use DateDisplay here
                 // "T" for Temperature
                 "T" => $"{DayOfWeek}: {MaxTemp:F0}° / {MinTemp:F0}°",
                 // "D" for Date only
-                "D" => Date.ToString("MMM d", formatProvider),
+                "D" => DateDisplay, // Use DateDisplay here
                 // "F" for Full description
-                "F" => $"{DayOfWeek} ({Date:MMM d}): {WeatherDescription}. High {MaxTemp:F0}°, Low {MinTemp:F0}°. {PrecipitationProbability}% chance of rain.",
+                "F" => $"{DayOfWeek} ({DateDisplay}): {WeatherDescription}. High {MaxTemp:F0}°, Low {MinTemp:F0}°. {PrecipitationProbability}% chance of rain.",
                 _ => throw new FormatException($"The '{format}' format string is not supported.")
             };
         }

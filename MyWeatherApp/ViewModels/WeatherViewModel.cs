@@ -12,6 +12,7 @@ namespace MyWeatherApp.ViewModels
     public partial class WeatherViewModel : ObservableObject
     {
         private readonly IWeatherService _weatherService;
+        private IDispatcherTimer _timer;
 
         [ObservableProperty]
         private WeatherData _weatherData;
@@ -36,7 +37,12 @@ namespace MyWeatherApp.ViewModels
         public WeatherViewModel(IWeatherService weatherService)
         {
             _weatherService = weatherService;
-            CurrentWeatherDescription = "Loading weather...";
+            CurrentWeatherDescription = AppStrings.LoadingWeather;
+
+            _timer = Application.Current.Dispatcher.CreateTimer();
+            _timer.Interval = TimeSpan.FromMinutes(5); //auto update every 5 mins
+            _timer.Tick += (s, e) => Timer_Tick();
+            _timer.Start();
         }
 
         public bool IsNotLoading => !IsLoading;
@@ -54,11 +60,11 @@ namespace MyWeatherApp.ViewModels
 
                 if (WeatherData != null)
                 {
-                    var (icon, description) = WeatherCodeHelper.GetWeatherDisplayInfo(
+                    var (icon, descriptionKey) = WeatherCodeHelper.GetWeatherDisplayInfo(
                         WeatherData.Current.WeatherCode,
                         WeatherData.Current.IsDay == 1);
 
-                    CurrentWeatherDescription = description;
+                    CurrentWeatherDescription = AppStringsHelper.GetString(descriptionKey);
                     CurrentWeatherIcon = icon;
 
                     ProcessDailyForecast();
@@ -67,19 +73,19 @@ namespace MyWeatherApp.ViewModels
                     LogForecastProcessing("Daily", "Hourly");
 
                     // Set the display text to the current time
-                    LastUpdatedDisplay = $"Last updated: {DateTime.Now:HH:mm}";
+                    LastUpdatedDisplay = string.Format(AppStrings.LastUpdated, DateTime.Now);
                 }
                 else
                 {
-                    CurrentWeatherDescription = "Failed to load data.";
-                    LastUpdatedDisplay = "Update failed.";
+                    CurrentWeatherDescription = AppStrings.FailedToLoad;
+                    LastUpdatedDisplay = AppStrings.UpdateFailed;
                 }
             }
             catch (Exception ex)
             {
-                CurrentWeatherDescription = "An error occurred.";
+                CurrentWeatherDescription = AppStrings.FailedToLoad;
                 Console.WriteLine($"Error in LoadWeatherAsync: {ex.Message}");
-                LastUpdatedDisplay = "Update failed.";
+                LastUpdatedDisplay = AppStrings.UpdateFailed;
             }
             finally
             {
@@ -94,13 +100,14 @@ namespace MyWeatherApp.ViewModels
             for (int i = 0; i < WeatherData.Daily.Time.Length; i++)
             {
                 var date = DateTime.Parse(WeatherData.Daily.Time[i], CultureInfo.InvariantCulture);
-                var (icon, description) = WeatherCodeHelper.GetWeatherDisplayInfo(WeatherData.Daily.WeatherCode[i], true);
+                var (icon, descriptionKey) = WeatherCodeHelper.GetWeatherDisplayInfo(WeatherData.Daily.WeatherCode[i], true);
 
                 var dayItem = new DailyForecastItem
                 {
                     Date = date,
-                    DayOfWeek = (i == 0) ? "Today" : date.ToString("dddd"),
-                    WeatherDescription = description,
+                    DayOfWeek = GetLocalizedDayName(date, i),
+                    DateDisplay = GetLocalizedDateString(date),
+                    WeatherDescription = AppStringsHelper.GetString(descriptionKey),
                     WeatherIcon = icon,
                     MaxTemp = WeatherData.Daily.Temperature2mMax[i],
                     MinTemp = WeatherData.Daily.Temperature2mMin[i],
@@ -145,14 +152,14 @@ namespace MyWeatherApp.ViewModels
             {
                 var time = DateTime.Parse(timeSlice[i], CultureInfo.InvariantCulture);
                 bool isDay = isDaySlice[i] == 1;
-                var (icon, description) = WeatherCodeHelper.GetWeatherDisplayInfo(codeSlice[i], isDay);
+                var (icon, descriptionKey) = WeatherCodeHelper.GetWeatherDisplayInfo(codeSlice[i], isDay);
 
                 var item = new HourlyForecastItem
                 {
                     Time = time,
-                    TimeDisplay = (i == 0) ? "Now" : time.ToString("HH:00"),
+                    TimeDisplay = (i == 0) ? AppStrings.TimeNow : time.ToString("HH:00"),
                     Icon = icon,
-                    WeatherDescription = description,
+                    WeatherDescription = AppStringsHelper.GetString(descriptionKey),
                     Temperature = tempSlice[i],
                     PrecipitationChance = precipSlice[i]
                 };
@@ -172,6 +179,57 @@ namespace MyWeatherApp.ViewModels
         partial void OnIsLoadingChanged(bool value)
         {
             LoadWeatherCommand.NotifyCanExecuteChanged();
+        }
+
+        private string GetLocalizedDayName(DateTime date, int index)
+        {
+            if (index == 0)
+            {
+                return AppStrings.Today;
+            }
+
+            // to return the matching string from AppStrings.resx
+            return date.DayOfWeek switch
+            {
+                DayOfWeek.Monday => AppStrings.Monday,
+                DayOfWeek.Tuesday => AppStrings.Tuesday,
+                DayOfWeek.Wednesday => AppStrings.Wednesday,
+                DayOfWeek.Thursday => AppStrings.Thursday,
+                DayOfWeek.Friday => AppStrings.Friday,
+                DayOfWeek.Saturday => AppStrings.Saturday,
+                DayOfWeek.Sunday => AppStrings.Sunday,
+                _ => date.DayOfWeek.ToString() // Fallback just in case
+            };
+        }
+        private string GetLocalizedDateString(DateTime date)
+        {
+            string month = date.Month switch
+            {
+                1 => AppStrings.Month1,
+                2 => AppStrings.Month2,
+                3 => AppStrings.Month3,
+                4 => AppStrings.Month4,
+                5 => AppStrings.Month5,
+                6 => AppStrings.Month6,
+                7 => AppStrings.Month7,
+                8 => AppStrings.Month8,
+                9 => AppStrings.Month9,
+                10 => AppStrings.Month10,
+                11 => AppStrings.Month11,
+                12 => AppStrings.Month12,
+                _ => date.ToString("MMM") // Fallback to 3-letter abbreviation
+            };
+
+            return $"{month} {date.Day}";
+        }
+
+        private void Timer_Tick()
+        {
+            // Check if a refresh is already in progress
+            if (LoadWeatherCommand.CanExecute(null))
+            {
+                _ = LoadWeatherCommand.ExecuteAsync(null);
+            }
         }
     }
 }

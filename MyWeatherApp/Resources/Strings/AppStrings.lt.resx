@@ -169,10 +169,10 @@
     <value>Apsiniaukę</value>
   </data>
   <data name="WeatherFog" xml:space="preserve">
-    <value>Fog</value>
+    <value>Rūkas</value>
   </data>
   <data name="WeatherDrizzle" xml:space="preserve">
-    <value>Drizzle</value>
+    <value>Dulksna</value>
   </data>
   <data name="WeatherRain" xml:space="preserve">
     <value>Lietus</value>
@@ -191,5 +191,68 @@
   </data>
   <data name="WeatherUnknown" xml:space="preserve">
     <value>Nežinoma</value>
+  </data>
+  <data name="Monday" xml:space="preserve">
+    <value>Pirmadienis</value>
+  </data>
+  <data name="Tuesday" xml:space="preserve">
+    <value>Antradienis</value>
+  </data>
+  <data name="Wednesday" xml:space="preserve">
+    <value>Trečiadienis</value>
+  </data>
+  <data name="Thursday" xml:space="preserve">
+    <value>Ketvirtadienis</value>
+  </data>
+  <data name="Friday" xml:space="preserve">
+    <value>Penktadienis</value>
+  </data>
+  <data name="Saturday" xml:space="preserve">
+    <value>Šeštadienis</value>
+  </data>
+  <data name="Sunday" xml:space="preserve">
+    <value>Sekmadienis</value>
+  </data>
+  <data name="WeatherForecastAppTitle" xml:space="preserve">
+    <value>Orų prognozė</value>
+  </data>
+  <data name="TimeNow" xml:space="preserve">
+    <value>Dabar</value>
+  </data>
+  <data name="Month1" xml:space="preserve">
+    <value>Sausio</value>
+  </data>
+  <data name="Month2" xml:space="preserve">
+    <value>Vasario</value>
+  </data>
+  <data name="Month3" xml:space="preserve">
+    <value>Kovo</value>
+  </data>
+  <data name="Month4" xml:space="preserve">
+    <value>Balandžio</value>
+  </data>
+  <data name="Month5" xml:space="preserve">
+    <value>Gegužės</value>
+  </data>
+  <data name="Month6" xml:space="preserve">
+    <value>Birželio</value>
+  </data>
+  <data name="Month7" xml:space="preserve">
+    <value>Liepos</value>
+  </data>
+  <data name="Month8" xml:space="preserve">
+    <value>Rugpjūčio</value>
+  </data>
+  <data name="Month9" xml:space="preserve">
+    <value>Rugsėjo</value>
+  </data>
+  <data name="Month10" xml:space="preserve">
+    <value>Spalio</value>
+  </data>
+  <data name="Month11" xml:space="preserve">
+    <value>Lapkričio</value>
+  </data>
+  <data name="Month12" xml:space="preserve">
+    <value>Gruodžio</value>
   </data>
 </root>

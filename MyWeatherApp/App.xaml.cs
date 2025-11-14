@@ -1,15 +1,16 @@
-﻿namespace MyWeatherApp
+﻿using MyWeatherApp.Helpers;
+
+namespace MyWeatherApp
 {
     public partial class App : Application
     {
         public App()
         {
             InitializeComponent();
-        }
 
-        protected override Window CreateWindow(IActivationState? activationState)
-        {
-            return new Window(new AppShell());
+            LocalizationHelper.LoadLanguage();
+
+            MainPage = new AppShell();
         }
     }
 }
