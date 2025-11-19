@@ -1,16 +1,17 @@
-﻿using MyWeatherApp.Helpers;
+﻿using MyWeatherApp.Helpers; // Helper dependency
 
-namespace MyWeatherApp
+namespace MyWeatherApp // Project namespace
 {
-    public partial class App : Application
+    // Partial class
+    public partial class App : Application // Main application class
     {
-        public App()
+        public App() // Constructor
         {
-            InitializeComponent();
+            InitializeComponent(); // Load XAML components
 
-            LocalizationHelper.LoadLanguage();
+            LocalizationHelper.LoadLanguage(); // Load language settings
 
-            MainPage = new AppShell();
+            MainPage = new AppShell(); // Set the root page
         }
     }
 }

@@ -1,8 +1,9 @@
 ﻿namespace MyWeatherApp
 {
-    public partial class AppShell : Shell
+    // Partial class
+    public partial class AppShell : Shell // Main shell class
     {
-        public AppShell()
+        public AppShell() // Constructor
         {
             InitializeComponent();
         }

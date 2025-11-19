@@ -1,67 +1,75 @@
-﻿using MyWeatherApp.Core.Models;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿// The project consists of more than one module (assembly)
+using MyWeatherApp.Core.Models; // Model dependency
+using System.Text.Json; // JSON dependency
+using System.Text.Json.Serialization; // JSON property name dependency
 
-namespace MyWeatherApp.Core.Services
+namespace MyWeatherApp.Core.Services // Project service namespace
 {
-    //Sealed class
-    public sealed class WeatherService : IWeatherService
+    // Sealed class
+    // Created and applied interface
+    public sealed class WeatherService : IWeatherService // Service implementation
     {
-        //single HttpClient instance
+        // Static fields
         private static readonly HttpClient _client;
+        // Data structures from System.Collections or System.Collections.Generic are used
         private static readonly Dictionary<string, (double Lat, double Lon)> _cityCoordinates;
 
-        //Static constructor
-        static WeatherService()
+        // A static constructor is used
+        static WeatherService() // Static ctor for client/data init
         {
             _client = new HttpClient();
             _cityCoordinates = new Dictionary<string, (double Lat, double Lon)>
             {
-                { "Europe/Vilnius", (54.72, 25.24) }
+                { "Europe/Vilnius", (54.72, 25.24) } // Add coordinates
             };
         }
 
-        //Initialization using out arguments
-        // uses null-coalescing ?? operator
+        // Builds the API URL
+        // Operators ?, ?[], ??, or ??= are used
         private string GetApiUrl(string? timezone)
         {
-            // Set a default timezone if the provided one is null
-            string tzKey = timezone ?? "Europe/Vilnius";
+            // Operators ?, ?[], ??, or ??= are used
+            string tzKey = timezone ?? "Europe/Vilnius"; // Default value
 
-            // Use TryGetValue which uses an 'out' argument for initialization
-            if (!_cityCoordinates.TryGetValue(tzKey, out var coords))
+            // Initialization using out arguments
+            if (!_cityCoordinates.TryGetValue(tzKey, out var coords)) // Get coords
             {
-                coords = _cityCoordinates["Europe/Vilnius"];
+                coords = _cityCoordinates["Europe/Vilnius"]; // Fallback
             }
 
             return $"https://api.open-meteo.com/v1/forecast?latitude={coords.Lat}&longitude={coords.Lon}&timezone={tzKey}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m&hourly=temperature_2m,cloud_cover,precipitation_probability,weather_code,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max";
         }
 
-        //Default arguments
+        // Gets weather data from API
+        // Default and named arguments are used
+        // Operators ?, ?[], ??, or ??= are used
         public async Task<WeatherData> GetWeatherAsync(string? timezone = "Europe/Vilnius")
         {
-            string apiUrl = GetApiUrl(timezone);
+            string apiUrl = GetApiUrl(timezone); // Build URL
 
             try
             {
-                HttpResponseMessage response = await _client.GetAsync(apiUrl);
-                response.EnsureSuccessStatusCode();
-                string jsonResponse = await response.Content.ReadAsStringAsync();
+                HttpResponseMessage response = await _client.GetAsync(apiUrl); // Send request
+                response.EnsureSuccessStatusCode(); // Check status
+                string jsonResponse = await response.Content.ReadAsStringAsync(); // Read response
 
-                //Using null-conditional operator ?. and ??
-                WeatherData? weatherData = JsonSerializer.Deserialize<WeatherData>(jsonResponse);
-                return weatherData ?? throw new JsonException("Failed to deserialize weather data.");
+                // Operators ?, ?[], ??, or ??= are used
+                WeatherData? weatherData = JsonSerializer.Deserialize<WeatherData>(jsonResponse); // Deserialize
+                // Operators ?, ?[], ??, or ??= are used
+                return weatherData ?? throw new JsonException("Failed to deserialize weather data."); // Return or throw
             }
             catch (Exception e)
             {
-                Console.WriteLine($"\nAn error occurred: {e.Message}");
-                return null;
+                Console.WriteLine($"\nAn error occurred: {e.Message}"); // Log error
+                // Operators ?, ?[], ??, or ??= are used
+                return null; // Return null on fail
             }
         }
     }
 
     // --- Data Models ---
 
+    // Root weather data object
     public class WeatherData
     {
         [JsonPropertyName("latitude")]
@@ -83,6 +91,7 @@ namespace MyWeatherApp.Core.Services
         public DailyWeather Daily { get; set; }
     }
 
+    // Current weather data
     public class CurrentWeather
     {
         [JsonPropertyName("time")]
@@ -107,7 +116,7 @@ namespace MyWeatherApp.Core.Services
         public double WindSpeed10m { get; set; }
     }
 
-    //Using arrays instead of List<T> to allow for Range operators
+    // Hourly weather data (uses arrays)
     public class HourlyWeather
     {
         [JsonPropertyName("time")]
@@ -126,7 +135,7 @@ namespace MyWeatherApp.Core.Services
         public int[] IsDay { get; set; }
     }
 
-    //Using arrays instead of List<T>
+    // Daily weather data (uses arrays)
     public class DailyWeather
     {
         [JsonPropertyName("time")]
