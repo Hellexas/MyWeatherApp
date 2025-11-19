@@ -1,31 +1,31 @@
-﻿using System.Globalization;
-using Microsoft.Maui.Controls;
+﻿using System.Globalization; // CultureInfo dependency
+using Microsoft.Maui.Controls; // IValueConverter dependency
 
-namespace MyWeatherApp.Helpers
+namespace MyWeatherApp.Helpers // Project helper namespace
 {
-    /// A custom value converter that inverts a boolean value.
-    /// This is used in XAML to hide an element when a property is 'true'
+    // Custom value converter
     public class InverseBoolConverter : IValueConverter
     {
-        public object Convert(object? value, Type targetType, object parameter, CultureInfo culture)
+        // Operators ?, ?[], ??, or ??= are used
+        public object Convert(object? value, Type targetType, object parameter, CultureInfo culture) // Convert method
         {
-            // It checks if the value is actually a bool.
-            if (value is not bool boolValue)
-                return false; // Return a default value if it's not a bool
+            // The is operator is used
+            // Pattern matching is used
+            if (value is not bool boolValue) // Check type
+                return false; // Default value
 
-            // Return the opposite of the boolean value
-            return !boolValue;
+            return !boolValue; // Return inverted value
         }
 
-        public object ConvertBack(object? value, Type targetType, object parameter, CultureInfo culture)
+        // Operators ?, ?[], ??, or ??= are used
+        public object ConvertBack(object? value, Type targetType, object parameter, CultureInfo culture) // Convert back method
         {
+            // The is operator is used
+            // Pattern matching is used
+            if (value is not bool boolValue) // Check type
+                return false; // Default value
 
-            // This is the "nullable-aware" and safe version.
-            if (value is not bool boolValue)
-                return false; // Return a default value
-
-            // Return the opposite (which is the original)
-            return !boolValue;
+            return !boolValue; // Return inverted value
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36623.8 d17.14
+VisualStudioVersion = 17.14.36623.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWeatherApp", "MyWeatherApp\MyWeatherApp.csproj", "{1F285EB3-1E49-409D-B6F7-6CD32465F8FE}"
 EndProject
@@ -18,6 +18,7 @@ Global
 		{1F285EB3-1E49-409D-B6F7-6CD32465F8FE}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{1F285EB3-1E49-409D-B6F7-6CD32465F8FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F285EB3-1E49-409D-B6F7-6CD32465F8FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F285EB3-1E49-409D-B6F7-6CD32465F8FE}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{34646E8B-2DD8-4241-AA13-341E9384ECC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{34646E8B-2DD8-4241-AA13-341E9384ECC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34646E8B-2DD8-4241-AA13-341E9384ECC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
