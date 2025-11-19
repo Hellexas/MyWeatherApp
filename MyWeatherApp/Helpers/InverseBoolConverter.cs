@@ -1,31 +1,31 @@
-﻿using System.Globalization; // CultureInfo dependency
-using Microsoft.Maui.Controls; // IValueConverter dependency
+﻿using System.Globalization;
+using Microsoft.Maui.Controls;
 
-namespace MyWeatherApp.Helpers // Project helper namespace
+namespace MyWeatherApp.Helpers
 {
-    // Custom value converter
+    /// A custom value converter that inverts a boolean value.
+    /// This is used in XAML to hide an element when a property is 'true'
     public class InverseBoolConverter : IValueConverter
     {
-        // Operators ?, ?[], ??, or ??= are used
-        public object Convert(object? value, Type targetType, object parameter, CultureInfo culture) // Convert method
+        public object Convert(object? value, Type targetType, object parameter, CultureInfo culture)
         {
-            // The is operator is used
-            // Pattern matching is used
-            if (value is not bool boolValue) // Check type
-                return false; // Default value
+            // It checks if the value is actually a bool.
+            if (value is not bool boolValue)
+                return false; // Return a default value if it's not a bool
 
-            return !boolValue; // Return inverted value
+            // Return the opposite of the boolean value
+            return !boolValue;
         }
 
-        // Operators ?, ?[], ??, or ??= are used
-        public object ConvertBack(object? value, Type targetType, object parameter, CultureInfo culture) // Convert back method
+        public object ConvertBack(object? value, Type targetType, object parameter, CultureInfo culture)
         {
-            // The is operator is used
-            // Pattern matching is used
-            if (value is not bool boolValue) // Check type
-                return false; // Default value
 
-            return !boolValue; // Return inverted value
+            // This is the "nullable-aware" and safe version.
+            if (value is not bool boolValue)
+                return false; // Return a default value
+
+            // Return the opposite (which is the original)
+            return !boolValue;
         }
     }
 }

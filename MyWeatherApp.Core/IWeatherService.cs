@@ -1,14 +1,9 @@
-﻿// The project consists of more than one module (assembly)
-using MyWeatherApp.Core.Models; // Model dependency
+﻿using MyWeatherApp.Core.Models;
 
-namespace MyWeatherApp.Core.Services // Project service namespace
+namespace MyWeatherApp.Core.Services
 {
-    // applied interface
-    public interface IWeatherService // Service contract
+    public interface IWeatherService
     {
-        // Async method definition
-        // Default and named arguments are used
-        // Operators ?, ?[], ??, or ??= are used
         Task<WeatherData> GetWeatherAsync(string? timezone = "Europe/Vilnius");
     }
 }

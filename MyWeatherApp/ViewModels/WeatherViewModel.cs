@@ -6,8 +6,6 @@ using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using MyWeatherApp.Resources.Strings;
 using System.Globalization;
-using System.Linq;
-using Microsoft.Maui.Graphics;
 
 namespace MyWeatherApp.ViewModels
 {
@@ -28,26 +26,10 @@ namespace MyWeatherApp.ViewModels
         [ObservableProperty]
         private string _currentWeatherIcon = "\uf07b";
 
+
+        // This will hold the text for the "Last updated" label
         [ObservableProperty]
         private string _lastUpdatedDisplay = " ";
-
-        [ObservableProperty]
-        private string _windDisplay;
-
-        [ObservableProperty]
-        private string _humidityDisplay;
-
-        [ObservableProperty]
-        private string _feelsLikeDisplay;
-
-        [ObservableProperty]
-        private string _hourlyForecastTitle;
-
-        [ObservableProperty]
-        private string _dailyForecastTitle;
-
-        [ObservableProperty]
-        private Brush _backgroundBrush;
 
         public ObservableCollection<DailyForecastItem> DailyForecast { get; } = new();
         public ObservableCollection<HourlyForecastItem> HourlyForecast { get; } = new();
@@ -57,10 +39,8 @@ namespace MyWeatherApp.ViewModels
             _weatherService = weatherService;
             CurrentWeatherDescription = AppStrings.LoadingWeather;
 
-            UpdateBackground(0, 1);
-
             _timer = Application.Current.Dispatcher.CreateTimer();
-            _timer.Interval = TimeSpan.FromMinutes(5);
+            _timer.Interval = TimeSpan.FromMinutes(5); //auto update every 5 mins
             _timer.Tick += (s, e) => Timer_Tick();
             _timer.Start();
         }
@@ -71,6 +51,8 @@ namespace MyWeatherApp.ViewModels
         private async Task LoadWeatherAsync()
         {
             IsLoading = true;
+            DailyForecast.Clear();
+            HourlyForecast.Clear();
 
             try
             {
@@ -78,9 +60,6 @@ namespace MyWeatherApp.ViewModels
 
                 if (WeatherData != null)
                 {
-                    DailyForecast.Clear();
-                    HourlyForecast.Clear();
-
                     var (icon, descriptionKey) = WeatherCodeHelper.GetWeatherDisplayInfo(
                         WeatherData.Current.WeatherCode,
                         WeatherData.Current.IsDay == 1);
@@ -88,18 +67,12 @@ namespace MyWeatherApp.ViewModels
                     CurrentWeatherDescription = AppStringsHelper.GetString(descriptionKey);
                     CurrentWeatherIcon = icon;
 
-                    WindDisplay = string.Format(AppStrings.Wind, WeatherData.Current.WindSpeed10m);
-                    HumidityDisplay = string.Format(AppStrings.Humidity, WeatherData.Current.RelativeHumidity2m);
-                    FeelsLikeDisplay = string.Format(AppStrings.FeelsLike, WeatherData.Current.ApparentTemperature);
-
-                    HourlyForecastTitle = AppStrings.HourlyForecastTitle;
-                    DailyForecastTitle = AppStrings.SevenDayForecastTitle;
-
-                    UpdateBackground(WeatherData.Current.WeatherCode, WeatherData.Current.IsDay);
-
                     ProcessDailyForecast();
                     ProcessHourlyForecast();
 
+                    LogForecastProcessing("Daily", "Hourly");
+
+                    // Set the display text to the current time
                     LastUpdatedDisplay = string.Format(AppStrings.LastUpdated, DateTime.Now);
                 }
                 else
@@ -124,24 +97,10 @@ namespace MyWeatherApp.ViewModels
         {
             if (WeatherData?.Daily?.Time == null) return;
 
-            // Calculate global range ONLY for positioning (Layout)
-            double weekMin = WeatherData.Daily.Temperature2mMin.Min();
-            double weekMax = WeatherData.Daily.Temperature2mMax.Max();
-            double tempRange = weekMax - weekMin;
-            if (tempRange < 1) tempRange = 1;
-
             for (int i = 0; i < WeatherData.Daily.Time.Length; i++)
             {
                 var date = DateTime.Parse(WeatherData.Daily.Time[i], CultureInfo.InvariantCulture);
                 var (icon, descriptionKey) = WeatherCodeHelper.GetWeatherDisplayInfo(WeatherData.Daily.WeatherCode[i], true);
-
-                double dayMin = WeatherData.Daily.Temperature2mMin[i];
-                double dayMax = WeatherData.Daily.Temperature2mMax[i];
-
-                // Positioning: Relative to week (Fills the space)
-                double startFactor = (dayMin - weekMin) / tempRange;
-                double widthFactor = (dayMax - dayMin) / tempRange;
-                if (widthFactor < 0.05) widthFactor = 0.05;
 
                 var dayItem = new DailyForecastItem
                 {
@@ -150,18 +109,14 @@ namespace MyWeatherApp.ViewModels
                     DateDisplay = GetLocalizedDateString(date),
                     WeatherDescription = AppStringsHelper.GetString(descriptionKey),
                     WeatherIcon = icon,
-                    MaxTemp = dayMax,
-                    MinTemp = dayMin,
-                    PrecipitationProbability = WeatherData.Daily.PrecipitationProbabilityMax[i],
-
-                    BarStartFactor = startFactor,
-                    BarWidthFactor = widthFactor,
+                    MaxTemp = WeatherData.Daily.Temperature2mMax[i],
+                    MinTemp = WeatherData.Daily.Temperature2mMin[i],
+                    PrecipitationProbability = WeatherData.Daily.PrecipitationProbabilityMax[i]
                 };
                 DailyForecast.Add(dayItem);
             }
         }
 
-        // ... [ProcessHourlyForecast, etc. unchanged] ...
         private void ProcessHourlyForecast()
         {
             if (WeatherData?.Hourly?.Time == null || WeatherData.Current?.Time == null) return;
@@ -228,7 +183,12 @@ namespace MyWeatherApp.ViewModels
 
         private string GetLocalizedDayName(DateTime date, int index)
         {
-            if (index == 0) return AppStrings.Today;
+            if (index == 0)
+            {
+                return AppStrings.Today;
+            }
+
+            // to return the matching string from AppStrings.resx
             return date.DayOfWeek switch
             {
                 DayOfWeek.Monday => AppStrings.Monday,
@@ -238,10 +198,9 @@ namespace MyWeatherApp.ViewModels
                 DayOfWeek.Friday => AppStrings.Friday,
                 DayOfWeek.Saturday => AppStrings.Saturday,
                 DayOfWeek.Sunday => AppStrings.Sunday,
-                _ => date.DayOfWeek.ToString()
+                _ => date.DayOfWeek.ToString() // Fallback just in case
             };
         }
-
         private string GetLocalizedDateString(DateTime date)
         {
             string month = date.Month switch
@@ -258,95 +217,19 @@ namespace MyWeatherApp.ViewModels
                 10 => AppStrings.Month10,
                 11 => AppStrings.Month11,
                 12 => AppStrings.Month12,
-                _ => date.ToString("MMM")
+                _ => date.ToString("MMM") // Fallback to 3-letter abbreviation
             };
+
             return $"{month} {date.Day}";
         }
 
         private void Timer_Tick()
         {
+            // Check if a refresh is already in progress
             if (LoadWeatherCommand.CanExecute(null))
+            {
                 _ = LoadWeatherCommand.ExecuteAsync(null);
-        }
-
-        private void UpdateBackground(int code, int isDayInt)
-        {
-            bool isDay = isDayInt == 1;
-
-            Color startColor, endColor;
-
-            if (code <= 1)
-            {
-                if (isDay)
-                {
-                    startColor = Color.FromArgb("#2980B9");
-                    endColor = Color.FromArgb("#6DD5FA");
-                }
-                else
-                {
-                    startColor = Color.FromArgb("#0f2027");
-                    endColor = Color.FromArgb("#2c5364");
-                }
             }
-            else if (code <= 3 || code == 45 || code == 48)
-            {
-                if (isDay)
-                {
-                    startColor = Color.FromArgb("#606c88");
-                    endColor = Color.FromArgb("#3f4c6b");
-                }
-                else
-                {
-                    startColor = Color.FromArgb("#232526");
-                    endColor = Color.FromArgb("#414345");
-                }
-            }
-            else if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82))
-            {
-                if (isDay)
-                {
-                    startColor = Color.FromArgb("#373B44");
-                    endColor = Color.FromArgb("#4286f4");
-                }
-                else
-                {
-                    startColor = Color.FromArgb("#000000");
-                    endColor = Color.FromArgb("#434343");
-                }
-            }
-            else if ((code >= 71 && code <= 77) || code == 85 || code == 86)
-            {
-                if (isDay)
-                {
-                    startColor = Color.FromArgb("#83a4d4");
-                    endColor = Color.FromArgb("#b6fbff");
-                }
-                else
-                {
-                    startColor = Color.FromArgb("#0F2027");
-                    endColor = Color.FromArgb("#2C5364");
-                }
-            }
-            else if (code >= 95)
-            {
-                startColor = Color.FromArgb("#141E30");
-                endColor = Color.FromArgb("#243B55");
-            }
-            else
-            {
-                startColor = Color.FromArgb("#2C3E50");
-                endColor = Color.FromArgb("#4CA1AF");
-            }
-
-            var gradient = new LinearGradientBrush
-            {
-                StartPoint = new Point(0, 0),
-                EndPoint = new Point(1, 0)
-            };
-            gradient.GradientStops.Add(new GradientStop(startColor, 0.0f));
-            gradient.GradientStops.Add(new GradientStop(endColor, 1.0f));
-
-            BackgroundBrush = gradient;
         }
     }
 }

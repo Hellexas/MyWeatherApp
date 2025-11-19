@@ -1,26 +1,21 @@
-﻿using System.Resources; // ResourceManager dependency
+﻿using System.Resources;
 
-namespace MyWeatherApp.Resources.Strings // Project strings namespace
+namespace MyWeatherApp.Resources.Strings
 {
-    // Static helper class
     public static class AppStringsHelper
     {
-        // Resource manager instance
         private static readonly ResourceManager _resourceManager =
             new ResourceManager(typeof(AppStrings));
 
-        // Gets a localized string
         public static string GetString(string key)
         {
-            if (string.IsNullOrEmpty(key)) // Check key
-                return string.Empty; // Return empty
+            if (string.IsNullOrEmpty(key))
+                return string.Empty;
 
-            // Look up string by culture
-            // Operators ?, ?[], ??, or ??= are used
+            // This looks up the string using the app's CURRENT culture
             string? localizedString = _resourceManager.GetString(key, AppStrings.Culture);
 
-            // Return string or key
-            // Operators ?, ?[], ??, or ??= are used
+            // Return the found string, or the key name if not found
             return localizedString ?? key;
         }
     }

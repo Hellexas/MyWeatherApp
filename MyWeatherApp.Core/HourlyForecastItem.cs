@@ -1,26 +1,23 @@
-﻿using System; // System dependency
+﻿using System;
 
-namespace MyWeatherApp.Core.Models // Project model namespace
+namespace MyWeatherApp.Core.Models
 {
-    // abstract class (inherits from ForecastItemBase)
-    // implemented IComparable<T>
-    // Sealed class
-    public sealed class HourlyForecastItem : ForecastItemBase, IComparable<HourlyForecastItem> // Hourly forecast data
+    // Inherits from abstract class
+    // Implements IComparable (for sorting by time)
+    public sealed class HourlyForecastItem : ForecastItemBase, IComparable<HourlyForecastItem>
     {
-        // Properties
         public DateTime Time { get; set; }
         public string TimeDisplay { get; set; }
         public double Temperature { get; set; }
         public int PrecipitationChance { get; set; }
 
-        // Implemented IComparable<T>
-        // Operators ?, ?[], ??, or ??= are used
-        public int CompareTo(HourlyForecastItem? other) // Sort by time
+        // --- Implementation of IComparable<T> ---
+        // This defines the "natural" sort order for this object.
+        public int CompareTo(HourlyForecastItem? other)
         {
-            // The is operator is used
-            // Pattern matching is used
-            if (other is null) return 1; // Nulls last
-            return this.Time.CompareTo(other.Time); // Compare by Time property
+            // We sort by the Time.
+            if (other is null) return 1;
+            return this.Time.CompareTo(other.Time);
         }
     }
 }

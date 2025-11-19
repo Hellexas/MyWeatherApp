@@ -1,9 +1,7 @@
-﻿namespace MyWeatherApp.Core.Models // Project model namespace
+﻿namespace MyWeatherApp.Core.Models
 {
-    //abstract class
-    public abstract class ForecastItemBase // Base class for forecast items
+    public abstract class ForecastItemBase
     {
-        // Properties
         public string Icon { get; set; }
         public string WeatherDescription { get; set; }
     }

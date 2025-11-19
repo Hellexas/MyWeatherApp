@@ -1,45 +1,41 @@
-﻿using System.Globalization; // CultureInfo dependency
-using MyWeatherApp.Resources.Strings; // AppStrings dependency
+﻿using System.Globalization;
+using MyWeatherApp.Resources.Strings;
 
-namespace MyWeatherApp.Helpers // Project helper namespace
+namespace MyWeatherApp.Helpers
 {
-    // Static helper class
     public static class LocalizationHelper
     {
-        // Sets the application language
         public static void SetLanguage(string cultureName)
         {
-            // Set resource culture
+            // 1. Set the culture for the AppStrings resource file
             AppStrings.Culture = new CultureInfo(cultureName);
 
-            // Save choice
+            // 2. Persist the user's choice
+            // This ensures the app remembers the language next time it starts
             Preferences.Set("user_language", cultureName);
         }
 
-        // Loads the saved language
         public static void LoadLanguage()
         {
-            // Get saved language
-            // Default and named arguments are used
-            // Operators ?, ?[], ??, or ??= are used
+            // 1. Check if a language is already saved
             string cultureName = Preferences.Get("user_language", null);
 
             if (string.IsNullOrEmpty(cultureName))
             {
-                // No language saved, do nothing
+                // No language saved, use the device default (which is the
+                // default behavior, so we do nothing)
                 return;
             }
 
-            // Set saved language
+            // 2. A language was saved, so set it
             try
             {
                 AppStrings.Culture = new CultureInfo(cultureName);
             }
             catch (Exception)
             {
-                // Handle bad preference
-                // Operators ?, ?[], ??, or ??= are used
-                AppStrings.Culture = null; // Fallback
+                // Handle a potential bad culture name in preferences
+                AppStrings.Culture = null; // Fall back to device default
                 Preferences.Clear("user_language");
             }
         }

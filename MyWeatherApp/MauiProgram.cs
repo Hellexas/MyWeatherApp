@@ -1,37 +1,39 @@
-﻿using MyWeatherApp.ViewModels; // Viewmodel dependency
-// The project consists of more than one module (assembly)
-using MyWeatherApp.Core.Services; // Service dependency
-using Microsoft.Extensions.Logging; // Logging dependency
+﻿using MyWeatherApp.ViewModels;
+using MyWeatherApp.Core.Services;
+using Microsoft.Extensions.Logging;
 
-namespace MyWeatherApp // Project namespace
+namespace MyWeatherApp
 {
-    // Main program entry
     public static class MauiProgram
     {
-        // Creates the Maui app
         public static MauiApp CreateMauiApp()
         {
-            var builder = MauiApp.CreateBuilder(); // App builder
+            var builder = MauiApp.CreateBuilder();
             builder
-                .UseMauiApp<App>() // Use App class
-                                   // Delegates or lambda functions are used
-                .ConfigureFonts(fonts => // Font configuration
+                .UseMauiApp<App>()
+                .ConfigureFonts(fonts =>
                 {
+                    // Registers the default app fonts
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+
                     fonts.AddFont("Font Awesome 7 Free-Solid-900.otf", "FontAwesomeSolid");
                 });
 
-            // Dependency Injection
+            // --- DEPENDENCY INJECTION SECTION ---
             builder.Services.AddSingleton<IWeatherService, WeatherService>();
+
             builder.Services.AddTransient<WeatherViewModel>();
             builder.Services.AddTransient<MainPage>();
+            // --- END OF INJECTION SECTION ---
+
 
 #if DEBUG
-            builder.Logging.AddDebug(); // Enable debug logging
+            // Enables debug logging
+            builder.Logging.AddDebug();
 #endif
 
-            return builder.Build(); // Build and return app
+            return builder.Build();
         }
     }
 }
