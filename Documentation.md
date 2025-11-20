@@ -101,3 +101,39 @@ Programėlė naudoja pagalbines klases (Helpers) duomenų transformavimui:
 
 * Norint pridėti naują miestą, reikia papildyti `_cityCoordinates` žodyną `WeatherService` klasėje.
 * API raktas nereikalingas (Open-Meteo yra nemokamas nekomerciniam naudojimui).
+
+---
+
+## Funkcionalumų panaudojimas kode
+
+Šioje skiltyje pateikiamas C# kalbos ir .NET platformos funkcionalumų sąrašas bei jų realizacijos vietos projekte:
+
+### 1. Objektinis Programavimas (OOP) ir Tipai
+* **Nuosava sąsaja (`Interface`)**: `IWeatherService` (faile `IWeatherService.cs`) – apibrėžia orų paslaugos kontraktą.
+* **Abstrakti klasė**: `ForecastItemBase` (faile `ForecastItemBase.cs`) – bazinė klasė, suteikianti bendrą funkcionalumą prognozių elementams.
+* **„Sealed“ klasė**: `WeatherService` (faile `WeatherApi.cs`) – klasė uždaryta paveldėjimui, siekiant užtikrinti logikos vientisumą.
+* **Statinis konstruktorius**: `WeatherService` klasėje (faile `WeatherApi.cs`) – naudojamas vienkartiniam `HttpClient` iniciavimui (`static WeatherService()`).
+* **Dalijamos klasės (`Partial class`)**: `MainPage` (faile `MainPage.xaml.cs`) – standartinis MAUI/WPF šablonas UI klasėms.
+* **Standartinių sąsajų implementacija**:
+    * **`IComparable<T>`**: `DailyForecastItem` klasėje (faile `DailyForecastItem.cs`) – leidžia rikiuoti prognozes.
+    * **`IEquatable<T>`**: `DailyForecastItem` klasėje (faile `DailyForecastItem.cs`) – efektyviam objektų lyginimui.
+    * **`IFormattable`**: `DailyForecastItem` klasėje (faile `DailyForecastItem.cs`) – lanksčiam tekstiniam atvaizdavimui.
+
+### 2. Sintaksė ir Operatoriai
+* **`switch` su `when` raktiniu žodžiu**: `WeatherCodeHelper.cs` metode `GetWeatherIcon` – naudojamas orų kodų grupavimui (pvz., `case int n when (n >= 1 && n <= 3):`).
+* **`Range` tipas (Indeksų rėžiai)**: `WeatherViewModel.cs` metode `ProcessHourlyForecast` – naudojama sintaksė `hourly.Time[..24]` paimti pirmas 24 valandas.
+* **„Pattern Matching“ ir `is` operatorius**: `DailyForecastItem.cs` metode `Equals` (`if (obj is DailyForecastItem other)`) ir `WeatherCodeHelper.cs`.
+* **Operatorių perdengimas (`Operator overloading`)**: `DailyForecastItem.cs` – perdengti `>` ir `<` operatoriai temperatūrų lyginimui.
+* **`params` raktinis žodis**: `ForecastItemBase.cs` metode `GetFormattedData` – leidžia perduoti kintamą argumentų skaičių.
+* **Bitinės operacijos**: Naudojamos `DailyForecastItem.cs` metode `GetHashCode` (paprastai `^` operatorius maišos kodo generavimui).
+* **Operatoriai `?.`, `??`, `??=`**: Plačiai naudojami null reikšmių saugikliams, pvz., `WeatherViewModel.cs` (`WeatherData?.Current`).
+
+### 3. Duomenys ir Metodai
+* **Inicializacija naudojant `out`**: `DailyForecastItem.cs` metode `Deconstruct` (arba `TryParse` kvietimuose `WeatherViewModel`).
+* **Dekonstruktorius (`Deconstructor`)**: `DailyForecastItem.cs` – leidžia išskaidyti objektą į kintamuosius (`var (min, max, date) = item`).
+* **Pasirinktiniai ir pavadinti argumentai**: `IWeatherService.GetWeatherAsync` (numatytasis parametras `timezone`) ir kviečiant metodą `WeatherViewModel.cs` (`timezone: "Europe/Vilnius"`).
+* **Delegatai ir Lambda funkcijos**: Naudojami `RelayCommand` apibrėžimuose (`WeatherViewModel.cs`) ir LINQ užklausose (`.Where(x => ...)`).
+* **Kolekcijos (`System.Collections.Generic`)**: `Dictionary` naudojamas `WeatherService.cs`, o `ObservableCollection` – `WeatherViewModel.cs`.
+
+### 4. Architektūra
+* **Keli moduliai (Assemblies)**: Projektas atskirtas į `MyWeatherApp.Core` (logika) ir `MyWeatherApp` (UI platforma).
